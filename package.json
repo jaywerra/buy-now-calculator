@@ -3,6 +3,9 @@
   "type": "module",
   "version": "0.0.1",
   "private": true,
+  "browserslist": [
+    "defaults"
+  ],
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -11,6 +14,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^1.6.15"
+    "astro": "^1.6.15",
+    "autoprefixer": "^10.4.13",
+    "cssnano": "^5.1.14",
+    "postcss": "^8.4.20",
+    "postcss-preset-env": "latest"
   }
 }

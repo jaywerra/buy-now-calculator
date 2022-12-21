@@ -1,0 +1,105 @@
+---
+export interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+<div>
+    <h1>{title}</h1>
+    <div class="card">
+        <div class="card-header">
+            <h2>
+                Falcon Go
+            </h2>
+        </div>
+        <div class="card-body">
+            <p>Additional Endpoints</p>
+            <div class="card-controls">
+                <button id="addEndpoint">+</button>
+                <button id="subtractEndpoint">-</button>
+            </div>
+            <div style="padding: 20px 0;">
+                <p><strong>Subtotal: </strong>$<span id="subtotal">299.95</span></p>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a href="https://crowdstrike.com?endpoints=5" id="buyUrl" class="button" target="_blank">
+                Buy Now &rarr;
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const addEndpointButton = document.querySelector("#addEndpoint");
+    const subtractEndpointButton = document.querySelector("#subtractEndpoint");
+    const buyNowLink = document.querySelector("#buyUrl");
+    const subTotal = document.querySelector("#subtotal");
+    const url = "https://crowdstrike.com";
+    let sum = parseFloat(subTotal.innerText);
+    
+    
+    addEndpointButton.addEventListener("click", function(){
+        let endpoints = 0;
+        sum += 59.99;
+        // console.log(typeof sum)
+
+        subTotal.innerText = sum.toFixed(2);
+        
+        endpoints = endpoints + 5;
+        
+        console.log(endpoints)
+
+        buyNowLink.href = `${url}?endpoints=${endpoints++}`;
+    });
+
+    subtractEndpointButton.addEventListener("click", function(){
+        if (sum <= 299.99) {
+            subtractEndpointButton.disbaled = true;
+        } else {
+            sum -= 59.99.toFixed(2);
+        }
+
+        subTotal.innerText = sum.toFixed(2);
+
+        buyNowLink.href = `${url}?endpoints=${subTotal.innerText}`;
+    })
+
+
+</script>
+
+<style>
+    .card-header {
+        padding: 1rem 0;
+        background: white;
+        border: 1px solid #000;
+        text-align: center;
+    }
+
+    .card-header h2 {
+        margin: 0;
+        color: #FC0000;
+    }
+
+    .card-body {
+        padding: 2rem;
+        border-left: 1px solid #000;
+        border-right: 1px solid #000;
+    }
+
+    .card-footer {
+        padding: 1rem 2rem;
+        background: white;
+        border: 1px solid #000;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 1rem 2rem;
+        background: #FC0000;
+        color: #fff;
+        text-decoration: none;
+    }
+
+</style>
