@@ -1,71 +1,123 @@
 ---
 export interface Props {
 	title: string;
+    features: string;
 }
 
-const { title } = Astro.props;
+const { title, features } = Astro.props;
 ---
 <div>
-    <h1>{title}</h1>
     <div class="card">
         <div class="card-header">
             <h2>
-                Falcon Go
+                {title}
             </h2>
         </div>
         <div class="card-body">
-            <p>Additional Endpoints</p>
-            <div class="card-controls">
-                <button id="addEndpoint">+</button>
-                <button id="subtractEndpoint">-</button>
-            </div>
-            <div style="padding: 20px 0;">
-                <p><strong>Subtotal: </strong>$<span id="subtotal">299.95</span></p>
+            <p class="card-price">
+                <strong>$<span class="card-cost">299.95</span></strong>
+                ($59.99 x <span class="card-endpoint-count">5</span>)
+            </p>
+            <h3>{title}</h3>
+            <p class="card-features">{features}</p>
+            <div class="card-calc">
+                <p class="card-endpoint-count">5</p>
+                <div class="card-controls">
+                    <button class="card-counter card-counter-increment">+</button>
+                    <button class="card-counter card-counter-decrement card-counter--disabled" disabled>-</button>
+                </div>
             </div>
         </div>
         <div class="card-footer">
-            <a href="https://crowdstrike.com?endpoints=5" id="buyUrl" class="button" target="_blank">
+            <a href="https://crowdstrike.com?endpoints=5" id="buyUrl" class="button buy-now-link" target="_blank" rel="noreferrer noopener">
                 Buy Now &rarr;
             </a>
         </div>
     </div>
+
+    <div class="details">
+        <ul>
+            <li>
+                <strong>Link URL:</strong> <a href="https://crowdstrike.com?totalendpoints=5" class="details-buy-now-link" target="_blank" rel="noreferrer noopener">https://crowdstrike.com?totalendpoints=5</a> 
+            </li>
+            <li>
+                <strong>Total # of Endpoints: </strong><span class="details-endpoint-count">5</span>
+            </li>
+            <li>
+                <strong>Total Cost: </strong>$<span class="details-cost">299.95</span>
+            </li>
+        </ul>
+    </div>
 </div>
 
 <script>
-    const addEndpointButton = document.querySelector("#addEndpoint");
-    const subtractEndpointButton = document.querySelector("#subtractEndpoint");
-    const buyNowLink = document.querySelector("#buyUrl");
-    const subTotal = document.querySelector("#subtotal");
-    const url = "https://crowdstrike.com";
-    let sum = parseFloat(subTotal.innerText);
-    
-    
-    addEndpointButton.addEventListener("click", function(){
-        let endpoints = 0;
-        sum += 59.99;
-        // console.log(typeof sum)
+    const cardIncrement = document.querySelector(".card-counter-increment");
+    const cardDecrement = document.querySelector(".card-counter-decrement");
+    const currentCost = document.querySelector(".card-cost");
+    let count = parseFloat(currentCost.innerText);
+    const endpointCount = document.querySelectorAll(".card-endpoint-count");
+    const endpointIncrementor = 1;
+    let endpointStart = 5;
+    let endpointCost = 59.99;
+    let buyNowURL = document.querySelector(".buy-now-link");
 
-        subTotal.innerText = sum.toFixed(2);
-        
-        endpoints = endpoints + 5;
-        
-        console.log(endpoints)
+    // Details Section 
+    // Demo purposes only
+    let detailsBuyNowURL = document.querySelector(".details-buy-now-link");
+    let detailsEndpointCount = document.querySelector(".details-endpoint-count");
+    const detailsCost = document.querySelector(".details-cost");
 
-        buyNowLink.href = `${url}?endpoints=${endpoints++}`;
-    });
+    cardIncrement.addEventListener("click", function(event) {
+        count += endpointCost;
+        endpointStart += endpointIncrementor;
+        currentCost.innerHTML = count.toFixed(2);
 
-    subtractEndpointButton.addEventListener("click", function(){
-        if (sum <= 299.99) {
-            subtractEndpointButton.disbaled = true;
-        } else {
-            sum -= 59.99.toFixed(2);
+        // Demo
+        detailsCost.innerHTML = count.toFixed(2);
+
+        if (endpointStart >= 5) {
+            cardDecrement.disabled = false;
+            cardDecrement.classList.remove("card-counter--disabled");
         }
 
-        subTotal.innerText = sum.toFixed(2);
+        for (let i = 0; i < endpointCount.length; i++) {
+            endpointCount[i].innerHTML = endpointStart;
+            buyNowURL.href = `https://crowdstrike.com?totalendpoints=${endpointStart}`;
 
-        buyNowLink.href = `${url}?endpoints=${subTotal.innerText}`;
-    })
+            // Demo purposes only
+            detailsBuyNowURL.href = `https://crowdstrike.com?totalendpoints=${endpointStart}`;
+            detailsBuyNowURL.innerText = `https://crowdstrike.com?totalendpoints=${endpointStart}`;
+            detailsEndpointCount.innerText = endpointStart;
+        }
 
+        event.preventDefault();
+    });
+
+    cardDecrement.addEventListener("click", function(event) {
+        count -= endpointCost;
+        endpointStart -= endpointIncrementor;
+        currentCost.innerHTML = count.toFixed(2);
+
+        // Demo
+        detailsCost.innerHTML = count.toFixed(2);
+
+        if (endpointStart <= 5) {
+            cardDecrement.disabled = true;
+            cardDecrement.classList.add("card-counter--disabled");
+        }
+
+        for (let i = 0; i < endpointCount.length; i++) {
+            endpointCount[i].innerHTML = endpointStart;
+            buyNowURL.href = `https://crowdstrike.com?totalendpoints=${endpointStart}`;
+
+            // Demo purposes only
+            detailsBuyNowURL.href = `https://crowdstrike.com?totalendpoints=${endpointStart}`;
+            detailsBuyNowURL.innerText = `https://crowdstrike.com?totalendpoints=${endpointStart}`;
+            detailsEndpointCount.innerText = endpointStart;
+        }
+
+        event.preventDefault();
+    });
 
 </script>
 
@@ -88,18 +140,68 @@ const { title } = Astro.props;
         border-right: 1px solid #000;
     }
 
+    .card-features {
+        max-width: 250px;
+        font-size: 0.85rem;
+        line-height: 1.25;
+    }
+
     .card-footer {
         padding: 1rem 2rem;
         background: white;
         border: 1px solid #000;
     }
 
+    .card-calc {
+        display: flex;
+    }
+
+    .card-calc p {
+        margin: 0 1rem 0 0;
+        padding: 10px;
+        background: #fff;
+        border: 1px solid #000;
+    }
+
+    .card-counter {
+        padding: .65rem 1rem;
+        background: #fc0000;
+        border: 1px solid #000;
+        color: #fff;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    .card-counter.card-counter--disabled {
+        pointer-events: none;
+        opacity: 0.45;
+    }
+
     .button {
         display: inline-block;
         padding: 1rem 2rem;
         background: #FC0000;
+        border: 1px solid #000;
         color: #fff;
         text-decoration: none;
+        transition: ease-in-out .25s;
+    }
+
+    .button:hover {
+        transform: scale(1.01);
+    }
+
+    .details {
+        margin: 2rem 0;
+    }
+
+    .details a {
+        color: #000;
+    }
+
+    .details li {
+        margin-bottom: 0.5rem;
     }
 
 </style>
