@@ -46,6 +46,9 @@ const { title, features } = Astro.props;
             <li>
                 <strong>Total Cost: </strong>$<span class="details-cost">299.95</span>
             </li>
+            <li>
+                <strong>Decrement Button Status: </strong><span class="button-status">Disabled</span>
+            </li>
         </ul>
     </div>
 </div>
@@ -60,6 +63,7 @@ const { title, features } = Astro.props;
     let endpointStart = 5;
     let endpointCost = 59.99;
     let buyNowURL = document.querySelector(".buy-now-link");
+    const buttonStatus = document.querySelector(".button-status");
 
     // Details Section 
     // Demo purposes only
@@ -78,6 +82,7 @@ const { title, features } = Astro.props;
         if (endpointStart >= 5) {
             cardDecrement.disabled = false;
             cardDecrement.classList.remove("card-counter--disabled");
+            buttonStatus.innerText = "Enabled";
         }
 
         for (let i = 0; i < endpointCount.length; i++) {
@@ -104,6 +109,7 @@ const { title, features } = Astro.props;
         if (endpointStart <= 5) {
             cardDecrement.disabled = true;
             cardDecrement.classList.add("card-counter--disabled");
+            buttonStatus.innerText = "Disabled";
         }
 
         for (let i = 0; i < endpointCount.length; i++) {
